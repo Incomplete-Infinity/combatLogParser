@@ -146,8 +146,6 @@ graph LR
 
 This flow chart illustrates the iterative process of extracting data from the log entries, updating the cumulative damage variables, and storing the timestamp and cumulative damage values. The process continues until all log entries have been processed, after which the flow reaches the end.
 
-Apologies for the oversimplification. Here's an expanded version of the flow chart that includes more steps and details:
-
 ```mermaid
 graph LR
   subgraph "Combat Log Parser"
@@ -155,20 +153,45 @@ graph LR
   A[Start] --> Z
     subgraph "Parse Data"
     direction TB
-      Z[start a new iteration] ---> B
-      B[Read Log Entry] --> C
-      C[Is Log Entry Valid?]--No--> G[Ignore Log Entry]
-      C --Yes--> E[Extract Timestamp and Damage]
-      E --> F[Is Damage Positive?]
-      F --No--> G[Ignore Log Entry]
+      Z["Start
+a
+new
+iteration"] ---> B
+      B["Read
+Log
+Entry"] --> C
+      C{"Is
+Log
+Entry
+Valid"}--No--> G{"Ignore
+Log
+Entryx}
+      C --Yes--> E["Extract
+Timestamp
+and
+Damage"]
+      E --> F{"Is
+Damage
+Positive?"}
+      F --No--> G["Ignore
+Log
+Entry"]
       G --> I
     end
     subgraph "Generate Output"
       direction TB
-      F --Yes--> H[Update Cumulative Damage Variables]
-      H --> I[Is There More Data?]
+      F --Yes--> H["Update
+Cumulative
+Damage
+Variables"]
+      H --> I{"Is
+There
+More
+Data?"]
       I --Yes--> Z
-      I --No--> J[Generate Damage Graph]
+      I --No--> J["Generate
+Damage
+Graph"]
       J --> K[End]
     end
   end

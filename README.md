@@ -163,9 +163,9 @@ Entry"] --> C
       C{"Is
 Log
 Entry
-Valid"}--No--> G{"Ignore
+Valid"}--No--> G["Ignore
 Log
-Entryx}
+Entry"]
       C --Yes--> E["Extract
 Timestamp
 and

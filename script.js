@@ -1,4 +1,4 @@
-const fileInput = document.getElementById("fileInput");
+const fileInput = document.getElementById("file-input");
 fileInput.addEventListener("change", handleFileSelection);
 
 let combatData = {};

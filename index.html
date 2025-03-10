@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eve Online Log Parser</title>
+    <!-- CSS Reset -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css"
+      integrity="sha512-NmLkDIU1C/C88wi324HBc+S2kLhi08PN5GDeUVVVC/BVt/9Izdsc9SVeVfA1UZbY3sHUlDSyRXhCzHfr6hmPPw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <!-- Halfmoon CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/halfmoon@2.0.1/css/halfmoon.min.css"
+      rel="stylesheet"
+      integrity="sha256-SsJizWSIG9JT9Qxbiy8xnYJfjCAkhEQ0hihxRn7jt2M="
+      crossorigin="anonymous"
+    />
+    <!-- Halfmoon modern core theme -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/halfmoon@2.0.1/css/cores/halfmoon.modern.css"
+      rel="stylesheet"
+      integrity="sha256-DD6elX+jPmbFYPsGvzodUv2+9FHkxHlVtQi0/RJVULs="
+      crossorigin="anonymous"
+    />
+    <!-- Topcoat -->
+    <link
+      id="topcoat-stylesheet"
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/topcoat/0.8.0/css/topcoat-mobile-dark.min.css"
+    />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js style plugin -->
+    <!--<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-style@latest/dist/chartjs-plugin-style.min.js"></script>-->
+    <!-- moment.js -->
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-adapter-moment/1.0.1/chartjs-adapter-moment.min.js"
+      integrity="sha512-hVy4KxCKgnXi2ok7rlnlPma4JHXI1VPQeempoaclV1GwRHrDeaiuS1pI6DVldaj5oh6Opy2XJ2CTljQLPkaMrQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <!-- Hammer.js -->
+    <script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+    <!-- Chart.js zoom plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom/dist/chartjs-plugin-zoom.min.js"></script>
+  </head>
+
+  <body data-bs-theme="dark" data-bs-core="modern" class="text-body">
+    <header class="text-start sticky-top bg-secondary">
+      <h1 class="jumbotron ps-3">EVE Online Combat Log Analyzer</h1>
+    </header>
+    <main class="container row g-3 mx-auto">
+      <fieldset class="card col-12 mx-auto p-0">
+        <legend class="card-header">
+          <h2>Input Log File</h2>
+        </legend>
+        <section class="card-body">
+          <input
+            type="file"
+            id="file-input"
+            accept=".txt"
+            class="form-control"
+          />
+        </section>
+      </fieldset>
+      <div id="spinner-container" class="text-center my-5 d-none">
+        <div
+          class="spinner-grow specific-w-50 specific-h-50 text-primary"
+          role="status"
+        >
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+      <article id="results-container" class="d-none">
+        <section class="card col-12 mx-auto p-0">
+          <h3 class="card-header">Details</h3>
+          <div class="card-body">
+            <table id="details-table" class="table">
+              <thead class="table-secondary">
+                <tr>
+                  <th scope="col">Date</th>
+                  <th scope="col">Character</th>
+                  <th scope="col">Systems Traversed</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <time id="log-date" datetime="2024-10-21T15:45:06Z"
+                      >2024-10-21 15:45:06</time
+                    >
+                  </td>
+                  <td>
+                    <figure>
+                      <img
+                        id="character-portrait"
+                        src="#"
+                        alt="xxxxxxxx xxxxxxxxxxxx"
+                        class="placeholder"
+                        height="64"
+                        width="64"
+                      />
+                      <figcaption id="character-name">
+                        xxxxxxxx xxxxxxxxxxxxxx
+                      </figcaption>
+                    </figure>
+                  </td>
+                  <td>
+                    <span id="system-count">00</span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <section class="card col-12 mx-auto p-0">
+          <h3 class="card-header">Weapon Efficiency</h3>
+          <div class="card-body">
+            <table id="time-stats-table" class="table">
+              <thead class="table-secondary">
+                <tr>
+                  <th scope="col">Time Undocked/Total Time</th>
+                  <th scope="col">Weapon Analysis</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>00Hr/00Hr</td>
+                  <td>
+                    <figure>
+                      <canvas
+                        id="hitQualityChart"
+                        class="placeholder"
+                        height="64"
+                        width="128"
+                      ></canvas>
+                      <figcaption>Hit Quality Pie Charts By Weapon</figcaption>
+                    </figure>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+        <section class="card col-12 mx-auto p-0">
+          <header class="card-header">
+            <h3 class="card-text">Damage</h3>
+            <sup class="text-secondary">Over Time</sup>
+          </header>
+          <canvas id="damage-over-time-canvas"></canvas>
+        </section>
+        <section class="card col-12 mx-auto p-0">
+          <header class="card-header">
+            <h3 class="card-text">Damage Totals</h3>
+            <sup class="text-secondary">By Entity</sup>
+          </header>
+          <canvas id="damage-totals-canvas"></canvas>
+        </section>
+        <section class="card col-12 mx-auto p-0">
+          <header class="card-header">
+            <h3 class="card-text">Weapon Efficiency</h3>
+          </header>
+          <table id="weapon-stats-table" class="table">
+            <thead class="table-secondary">
+              <tr>
+                <th scope="col">Favorite Weapon</th>
+                <th scope="col">Total Damage</th>
+                <th scope="col">Accuracy</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td id="weapon-display"></td>
+                <td id="total-damage-display"></td>
+                <td id="accuracy-display"></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+        <section class="card col-12 mx-auto p-0">
+          <h3 class="card-header">Combat Log Table</h3>
+          <table id="combatTable" class="table">
+            <thead class="table-secondary">
+              <tr>
+                <th scope="col">Entity</th>
+                <th scope="col">Total Damage Dealt</th>
+                <th scope="col">Total Damage Received</th>
+              </tr>
+            </thead>
+            <tbody></tbody>
+          </table>
+        </section>
+      </article>
+    </main>
+    <footer class="text-end fixed-bottom bg-secondary">
+      <small class="jumbotron text-primary pe-3">© 2025 Incomplete Infinity</small>
+    </footer>
+    <script src="./script.js"></script>
+  </body>
+</html>
